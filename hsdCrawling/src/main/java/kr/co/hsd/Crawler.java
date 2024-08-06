@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -54,6 +55,9 @@ public class Crawler {
 	
 	        // WebDriver 초기화
 	        WebDriver driver = new ChromeDriver();
+	        driver.manage().window().setSize(new Dimension(900, 900));
+//	        String[] targetStartDays = {"2024년 7월 1일 월요일"};
+//	        String[] targetEndDays = {"2024년 7월 7일 일요일"};
 	        String[] targetStartDays = {"2023년 1월 1일 일요일", "2023년 7월 1일 토요일", "2024년 1월 1일 월요일"};
 	        String[] targetEndDays = {"2023년 6월 30일 금요일", "2023년 12월 31일 일요일", "2024년 6월 30일 일요일"};
 	        try {
