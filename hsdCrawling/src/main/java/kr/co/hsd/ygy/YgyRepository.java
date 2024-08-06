@@ -16,8 +16,7 @@ public class YgyRepository {
     }
     
     public List<Map<String, Object>> selectYgyDetail() {
-        String sql = "SELECT * FROM YGY_M_DTAIL"
-        		   + "WHERE COMPLITE_YN = 'N'";
+        String sql = "SELECT * FROM YGY_M_DTAIL WHERE COMPLITE_YN = 'N'";
         return jdbcTemplate.queryForList(sql);
     }
     

@@ -50,7 +50,7 @@ public class Crawler {
 			lnPartner = (String) ygyDetail.get("LN_PARTNER");
 	        // WebDriver 경로 설정 (ChromeDriver 예시)
 			String url = "https://ceo.yogiyo.co.kr/order-history/list";
-	        System.setProperty("webdriver.chrome.driver", "D:\\ko\\DEV\\hansot\\Crawling\\chromedriver.exe");
+	        System.setProperty("webdriver.chrome.driver", "./src/main/resources/chromedriver.exe");
 	
 	        // WebDriver 초기화
 	        WebDriver driver = new ChromeDriver();
