@@ -15,8 +15,8 @@ public class YgyService {
         this.ygyRepository = ygyRepository;
     }
 	
-	public List<Map<String, Object>> selectYgyDetail() {
-		return ygyRepository.selectYgyDetail();
+	public List<Map<String, Object>> selectYgyDetail(String correctYn) {
+		return ygyRepository.selectYgyDetail(correctYn);
     }
 	
 	public void insertSale(List<YgyDAO> orderList) {
@@ -31,5 +31,9 @@ public class YgyService {
 	
 	public void updateComplite(String cdPartnerOrigin) {
 		ygyRepository.updateComplite(cdPartnerOrigin);
+	}
+
+	public void updateYgyDetailCorrectYn(String id, String pw, String correctYn) {
+		ygyRepository.updateYgyDetailCorrectYn(id, pw, correctYn);
 	}
 }

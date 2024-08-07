@@ -15,9 +15,9 @@ public class YgyRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
     
-    public List<Map<String, Object>> selectYgyDetail() {
-        String sql = "SELECT * FROM YGY_M_DTAIL WHERE COMPLITE_YN = 'N'";
-        return jdbcTemplate.queryForList(sql);
+    public List<Map<String, Object>> selectYgyDetail(String correctYn) {
+        String sql = "SELECT * FROM YGY_M_DTAIL WHERE COMPLITE_YN = 'N' AND CORRECT_YN = ?";
+        return jdbcTemplate.queryForList(sql, correctYn);
     }
     
     public void insertSale(YgyDAO order) {
@@ -39,6 +39,11 @@ public class YgyRepository {
 		// TODO Auto-generated method stub
 		String sql = "UPDATE YGY_M_DTAIL SET COMPLITE_YN = 'Y' WHERE (SELECT COUNT(*) FROM YGY_COMP_LOG WHERE CD_PARTNER_ORIGIN = ?) = 3";
 		jdbcTemplate.update(sql,cdPartnerOrigin);
+	}
+
+	public void updateYgyDetailCorrectYn(String id, String pw, String correctYn) {
+		String sql = "UPDATE YGY_M_DTAIL SET CORRECT_YN= ? WHERE ID = ? AND PW = ?;";
+		jdbcTemplate.update(sql,correctYn,id,pw);
 	}
 
 }

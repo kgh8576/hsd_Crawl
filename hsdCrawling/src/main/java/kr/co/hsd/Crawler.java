@@ -31,7 +31,7 @@ public class Crawler {
 	public void startCrawl() {
 		
 		//점포정보조회
-		List<Map<String, Object>> ygyDetailList = ygyService.selectYgyDetail();
+		List<Map<String, Object>> ygyDetailList = ygyService.selectYgyDetail("Y");
 		String id = "";
 		String pw = "";
 		String cdPartnerOrigin = ""; //Pos번호
@@ -239,5 +239,43 @@ public class Crawler {
 	        }
 		}
     }
+	
+	@GetMapping("/idPwCheck")
+	public void idPwCheck() {
+		String id = "";
+		String pw = "";
+		//점포정보조회
+		List<Map<String, Object>> ygyDetailList = ygyService.selectYgyDetail("N");
+		for (Map<String, Object> ygyDetail : ygyDetailList) {
+			id = (String) ygyDetail.get("id");
+			pw = (String) ygyDetail.get("pw");
+			
+			String url = "https://ceo.yogiyo.co.kr/order-history/list";
+	        System.setProperty("webdriver.chrome.driver", "./src/main/resources/chromedriver.exe");
+	
+	        // WebDriver 초기화
+	        WebDriver driver = new ChromeDriver();
+	        driver.manage().window().setSize(new Dimension(900, 900));
+	        driver.get(url); 
+            WebElement username = driver.findElement(By.name("username"));
+            WebElement password = driver.findElement(By.name("password"));
+            username.sendKeys(id);
+            password.sendKeys(pw);
+            WebElement login = driver.findElement(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/form/button"));
+            login.click();
+            try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            if(driver.findElement(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/form/span")).getText().isBlank()) {
+            	ygyService.updateYgyDetailCorrectYn(id,pw,"N");
+            }else {
+            	ygyService.updateYgyDetailCorrectYn(id,pw,"Y");
+            }
+            driver.quit();
+		}
+	}
 
 }
