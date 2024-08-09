@@ -9,9 +9,11 @@ import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,6 +58,7 @@ public class Crawler {
 	        // WebDriver 초기화
 	        WebDriver driver = new ChromeDriver();
 	        driver.manage().window().setSize(new Dimension(900, 900));
+	        Actions actions = new Actions(driver);
 //	        String[] targetStartDays = {"2024년 7월 1일 월요일"};
 //	        String[] targetEndDays = {"2024년 7월 7일 일요일"};
 	        String[] targetStartDays = {"2023년 1월 1일 일요일", "2023년 7월 1일 토요일", "2024년 1월 1일 월요일"};
@@ -70,6 +73,7 @@ public class Crawler {
 	            WebElement login = driver.findElement(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/form/button"));
 	            login.click();
 				Thread.sleep(2000);
+				actions.sendKeys(Keys.ESCAPE).perform();
 				boolean isFirst = true;
 	            WebElement calendar = driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[1]/div/div[1]/div/div/div/div/div[4]/div"));
 	            for (int k = 0; k < targetStartDays.length; k++) {
