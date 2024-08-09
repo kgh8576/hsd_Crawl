@@ -164,8 +164,8 @@ public class Crawler {
 			                					String orderDate = subDetail.findElement(By.xpath(".//span[2]")).getText();
 			                					String pattern = "yyyy.MM.dd (E) a hh:mm:ss";
 			                					SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.KOREAN);
-			                					SimpleDateFormat dateFormatYYYYMMDD = new SimpleDateFormat("YYYYMMDD");
-			                					SimpleDateFormat dateFormatYYYYMMDDHHmmss = new SimpleDateFormat("YYYYMMDDhhmmss");
+			                					SimpleDateFormat dateFormatYYYYMMDD = new SimpleDateFormat("YYYYMMdd");
+			                					SimpleDateFormat dateFormatYYYYMMDDHHmmss = new SimpleDateFormat("YYYYMMddhhmmss");
 			                					String date = "";
 			                					String time = "";
 			                					try {
@@ -256,7 +256,8 @@ public class Crawler {
 	        // WebDriver 초기화
 	        WebDriver driver = new ChromeDriver();
 	        driver.manage().window().setSize(new Dimension(900, 900));
-	        driver.get(url); 
+	        driver.get(url);
+	        	        
             WebElement username = driver.findElement(By.name("username"));
             WebElement password = driver.findElement(By.name("password"));
             username.sendKeys(id);
@@ -265,16 +266,18 @@ public class Crawler {
             login.click();
             try {
 				Thread.sleep(2000);
+				if(driver.getCurrentUrl().equals("https://ceo.yogiyo.co.kr/order-history/list")){
+					ygyService.updateYgyDetailCorrectYn(id,pw,"Y");
+				}else {
+					ygyService.updateYgyDetailCorrectYn(id,pw,"N");
+				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}finally {
+				driver.quit();
 			}
-            if(driver.findElement(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/form/span")).getText().isBlank()) {
-            	ygyService.updateYgyDetailCorrectYn(id,pw,"N");
-            }else {
-            	ygyService.updateYgyDetailCorrectYn(id,pw,"Y");
-            }
-            driver.quit();
+            
 		}
 	}
 

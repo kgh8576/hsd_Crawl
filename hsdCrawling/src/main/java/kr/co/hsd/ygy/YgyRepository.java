@@ -29,9 +29,7 @@ public class YgyRepository {
 
 	public void insertCompleteLog(String cdPartnerOrigin, String targetStartDays) {
 		// TODO Auto-generated method stub
-		String sql = "INSERT INTO YGY_COMP_LOG\\r\\n"
-				+ "(CD_PARTNER_ORIGIN, TARGET_START_DAYS)"
-				+ "VALUES(?,?)";
+		String sql = "INSERT INTO YGY_COMP_LOG (CD_PARTNER_ORIGIN, TARGET_START_DAYS) VALUES(?,?)";
 		jdbcTemplate.update(sql,cdPartnerOrigin, targetStartDays);
 	}
 	
@@ -42,7 +40,7 @@ public class YgyRepository {
 	}
 
 	public void updateYgyDetailCorrectYn(String id, String pw, String correctYn) {
-		String sql = "UPDATE YGY_M_DTAIL SET CORRECT_YN= ? WHERE ID = ? AND PW = ?;";
+		String sql = "UPDATE YGY_M_DTAIL SET CORRECT_YN= ? WHERE ID = ? AND PW = ?";
 		jdbcTemplate.update(sql,correctYn,id,pw);
 	}
 
