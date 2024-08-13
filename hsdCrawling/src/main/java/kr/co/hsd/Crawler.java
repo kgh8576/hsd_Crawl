@@ -3,7 +3,6 @@ package kr.co.hsd;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -72,16 +71,9 @@ public class Crawler {
 	        targetEndDayList.add("2024년 6월 30일 일요일");
 	        
 	        for (Map<String, Object> compLog : CompLogList) {
-	        	if(compLog.get("TARGET_START_DAYS").equals("2023년 1월 1일 일요일")) {
-	        		targetStartDayList.remove(0);
-	        		targetEndDayList.remove(0);
-	        	}else if (compLog.get("TARGET_START_DAYS").equals("2023년 7월 1일 토요일")){
-	        		targetStartDayList.remove(1);
-	        		targetEndDayList.remove(1);
-	        	}else if (compLog.get("TARGET_START_DAYS").equals("2024년 1월 1일 월요일")) {
-	        		targetStartDayList.remove(2);
-	        		targetEndDayList.remove(2);
-	        	}
+	        	int index = targetStartDayList.indexOf(compLog.get("TARGET_START_DAYS"));
+	        	targetStartDayList.remove(index);
+	        	targetEndDayList.remove(index);
 			}
 	        
 	        String[] targetStartDays = targetStartDayList.toArray(new String[0]);
@@ -198,7 +190,7 @@ public class Crawler {
 			                					String pattern = "yyyy.MM.dd (E) a hh:mm:ss";
 			                					SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.KOREAN);
 			                					SimpleDateFormat dateFormatYYYYMMDD = new SimpleDateFormat("YYYYMMdd");
-			                					SimpleDateFormat dateFormatYYYYMMDDHHmmss = new SimpleDateFormat("YYYYMMddhhmmss");
+			                					SimpleDateFormat dateFormatYYYYMMDDHHmmss = new SimpleDateFormat("YYYYMMddHHmmss");
 			                					String date = "";
 			                					String time = "";
 			                					try {
@@ -208,7 +200,7 @@ public class Crawler {
 			                						e.printStackTrace();
 			                					}
 			                					order.setDtSale(date);
-			                					order.setSalesTime(time);
+			                					 order.setSalesTime(time);
 			                				}else if (title.equals("결제방법")) {
 			                					//결제방법 /html/body/div[3]/div/div/div[2]/div/div[2]/div/ul/li[2]/span[2]
 			                					String lCdYserdef1 = driver.findElement(By.xpath("/html/body/div[3]/div/div/div[2]/div/div[2]/div/ul/li[2]/span[2]")).getText();
@@ -264,10 +256,9 @@ public class Crawler {
 		            isFirst = false;
 	            }
 	        }
-	        catch (InterruptedException e) {
+	        catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				e.getMessage();
 			}
 	        finally {
 	            // 브라우저 닫기
