@@ -20,6 +20,11 @@ public class YgyRepository {
         return jdbcTemplate.queryForList(sql, correctYn);
     }
     
+    public List<Map<String, Object>> selectYgyCompLog(String cdPartnerOrigin) {
+        String sql = "SELECT TARGET_START_DAYS FROM YGY_COMP_LOG WHERE CD_PARTNER_ORIGIN = ?";
+        return jdbcTemplate.queryForList(sql, cdPartnerOrigin);
+    }
+    
     public void insertSale(YgyDAO order) {
         String sql = "INSERT INTO YGY_SALE\r\n"
         		+ "(CD_PARTNER_ORIGIN, CD_PARTNER, LN_PARTNER, NO_COMPANY,DT_SALE, NOPOS, SLIPNO, SLIPLINE, SALESFG, CANCELYN, FGSYSTEM, AMTOT, ITEMTOT, NUMUSERDEF, DCRMK, QTSALE, ICDUSERDEF1, ICDUSERDEF2, ICDUSERDEF3, ICDUSERDEF4, FGPACK, LCDYSERDEF1, LCDYSERDEF2, SALESTIME, INSERTTIME)\r\n"
@@ -35,8 +40,8 @@ public class YgyRepository {
 	
 	public void updateComplite(String cdPartnerOrigin) {
 		// TODO Auto-generated method stub
-		String sql = "UPDATE YGY_M_DTAIL SET COMPLITE_YN = 'Y' WHERE (SELECT COUNT(*) FROM YGY_COMP_LOG WHERE CD_PARTNER_ORIGIN = ?) = 3";
-		jdbcTemplate.update(sql,cdPartnerOrigin);
+		String sql = "UPDATE YGY_M_DTAIL SET COMPLITE_YN = 'Y' WHERE CD_PARTNER_ORIGIN = ? AND (SELECT COUNT(*) FROM YGY_COMP_LOG WHERE CD_PARTNER_ORIGIN = ?) = 3";
+		jdbcTemplate.update(sql,cdPartnerOrigin,cdPartnerOrigin);
 	}
 
 	public void updateYgyDetailCorrectYn(String id, String pw, String correctYn) {

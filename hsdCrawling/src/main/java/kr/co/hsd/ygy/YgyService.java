@@ -19,6 +19,10 @@ public class YgyService {
 		return ygyRepository.selectYgyDetail(correctYn);
     }
 	
+	public List<Map<String, Object>> selectYgyCompLog(String cdPartnerOrigin) {
+		return ygyRepository.selectYgyCompLog(cdPartnerOrigin);
+    }
+	
 	public void insertSale(List<YgyDAO> orderList) {
 		for (YgyDAO order : orderList) {
 			ygyRepository.insertSale(order);

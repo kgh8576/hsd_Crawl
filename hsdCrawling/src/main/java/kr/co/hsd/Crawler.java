@@ -3,6 +3,7 @@ package kr.co.hsd;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,15 +55,38 @@ public class Crawler {
 	        // WebDriver 경로 설정 (ChromeDriver 예시)
 			String url = "https://ceo.yogiyo.co.kr/order-history/list";
 	        System.setProperty("webdriver.chrome.driver", "./src/main/resources/chromedriver.exe");
-	
+	        
 	        // WebDriver 초기화
 	        WebDriver driver = new ChromeDriver();
 	        driver.manage().window().setSize(new Dimension(900, 900));
-	        Actions actions = new Actions(driver);
 //	        String[] targetStartDays = {"2024년 7월 1일 월요일"};
 //	        String[] targetEndDays = {"2024년 7월 7일 일요일"};
-	        String[] targetStartDays = {"2023년 1월 1일 일요일", "2023년 7월 1일 토요일", "2024년 1월 1일 월요일"};
-	        String[] targetEndDays = {"2023년 6월 30일 금요일", "2023년 12월 31일 일요일", "2024년 6월 30일 일요일"};
+	        List<Map<String, Object>> CompLogList = ygyService.selectYgyCompLog(cdPartnerOrigin);
+	        List<String> targetStartDayList = new ArrayList<>();
+	        targetStartDayList.add("2023년 1월 1일 일요일");
+	        targetStartDayList.add("2023년 7월 1일 토요일");
+	        targetStartDayList.add("2024년 1월 1일 월요일");
+	        List<String> targetEndDayList = new ArrayList<>();
+	        targetEndDayList.add("2023년 6월 30일 금요일");
+	        targetEndDayList.add("2023년 12월 31일 일요일");
+	        targetEndDayList.add("2024년 6월 30일 일요일");
+	        
+	        for (Map<String, Object> compLog : CompLogList) {
+	        	if(compLog.get("TARGET_START_DAYS").equals("2023년 1월 1일 일요일")) {
+	        		targetStartDayList.remove(0);
+	        		targetEndDayList.remove(0);
+	        	}else if (compLog.get("TARGET_START_DAYS").equals("2023년 7월 1일 토요일")){
+	        		targetStartDayList.remove(1);
+	        		targetEndDayList.remove(1);
+	        	}else if (compLog.get("TARGET_START_DAYS").equals("2024년 1월 1일 월요일")) {
+	        		targetStartDayList.remove(2);
+	        		targetEndDayList.remove(2);
+	        	}
+			}
+	        
+	        String[] targetStartDays = targetStartDayList.toArray(new String[0]);
+	        String[] targetEndDays = targetEndDayList.toArray(new String[0]);
+	        
 	        try {
 	            // URL 접근
 	            driver.get(url); 
@@ -72,13 +96,18 @@ public class Crawler {
 	            password.sendKeys(pw);
 	            WebElement login = driver.findElement(By.xpath("/html/body/div[1]/div/div[1]/div/div[2]/form/button"));
 	            login.click();
-				Thread.sleep(2000);
+				Thread.sleep(5000);
+				Actions actions = new Actions(driver);
 				actions.sendKeys(Keys.ESCAPE).perform();
+				Thread.sleep(1000);
+				By closeLocator = By.xpath("//span[contains(@class, 'fvgffZ')]");
+				isElementPresent(driver, closeLocator);
 				boolean isFirst = true;
-	            WebElement calendar = driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[1]/div/div[1]/div/div/div/div/div[4]/div"));
+	            WebElement calendar = driver.findElement(By.xpath("//div[contains(@class, 'fAhEqz')]"));
 	            for (int k = 0; k < targetStartDays.length; k++) {
 		            calendar.click();
 		            Thread.sleep(2000);
+		            //상세정보 클릭
 		            driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[1]/div/div[1]/div[2]/div[2]/div/div/div[2]/div[1]/div[5]")).click();
 		            String targetStartMonth = targetStartDays[k].split(" ")[0] + " " +targetStartDays[k].split(" ")[1];
 		            String targetEndMonth = targetEndDays[k].split(" ")[0] + " " +targetEndDays[k].split(" ")[1];
@@ -105,7 +134,7 @@ public class Crawler {
 		            Thread.sleep(500);
 		            driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[1]/div/div[1]/div[2]/div[2]/div/div/div[2]/div[2]/button/div")).click();
 		            //조회된 데이터 유무 여부 체크
-		            Thread.sleep(2000);
+		            Thread.sleep(5000);
 		            boolean orderYn = driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[2]/div[1]")).getText().equals("");
 		            if(!orderYn) {
 		            	List<YgyDAO> orderList = new ArrayList<>();
@@ -121,7 +150,7 @@ public class Crawler {
 		            		List<WebElement> pageList = driver.findElements(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[5]/ul/li"));
 		            		pageList.get(pageList.size()-1).click();
 		            	}
-		            	Thread.sleep(2000);
+		            	Thread.sleep(5000);
 		            	for (int j = maxPageNum.intValue(); j > 0; j--) {
 			            	//테이블 row 가져오기
 			            	List<WebElement> orderRows = driver.findElements(By.xpath("/html/body/div[1]/div/div[2]/div/div[2]/div/div/div[1]/div/div[2]/div/div/div/div[4]/table/tbody/tr"));
@@ -217,8 +246,11 @@ public class Crawler {
 			            			//상세정보 닫기
 			            			driver.findElement(By.className("FullScreenModal___StyledIcon-sc-7lyzl-8")).click();
 			            		}
-							}//
+							}
 			            	if(j != 1) {
+			            		System.out.println(maxPageNum.intValue() + "|" + j);
+			            		Thread.sleep(500);
+			            		//이전 페이지
 			            		WebElement selectLi = driver.findElement(By.xpath("//li[contains(@class, 'gcbfNJ')]"));
 			            		selectLi.findElement(By.xpath("preceding-sibling::li[1]")).click();
 			            		Thread.sleep(500);
@@ -284,5 +316,14 @@ public class Crawler {
             
 		}
 	}
+	
+	public static boolean isElementPresent(WebDriver driver, By locator) {
+		try {
+			driver.findElement(locator).click();
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+    }
 
 }
