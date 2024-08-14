@@ -252,7 +252,10 @@ public class Crawler {
 		            ygyService.insertSale(orderList);
 		            ygyService.insertCompleteLog(cdPartnerOrigin, targetStartDays[k]);
 		            ygyService.updateComplite(cdPartnerOrigin);
-		            }//
+		            }else{
+		            	ygyService.insertCompleteLog(cdPartnerOrigin, targetStartDays[k]);
+			            ygyService.updateComplite(cdPartnerOrigin);
+		            }
 		            isFirst = false;
 	            }
 	        }
