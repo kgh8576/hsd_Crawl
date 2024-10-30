@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -32,11 +33,13 @@ public class ScreenshotCapture {
         
         // Chrome 옵션 설정
         ChromeOptions options = new ChromeOptions();
-//        options.addArguments("--headless"); // 헤드리스 모드로 실행 (브라우저 창이 보이지 않음)
+        //options.addArguments("--headless"); // 헤드리스 모드로 실행 (브라우저 창이 보이지 않음)
 
         // WebDriver 인스턴스 생성
         WebDriver driver = new ChromeDriver(options);
-
+        driver.manage().window().setSize(new Dimension(900, 900));
+        Path destination = null;
+        
         try {
             // 캡처할 URL로 이동
             driver.get(url);
@@ -45,7 +48,7 @@ public class ScreenshotCapture {
             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
             // 파일 저장 경로 설정
-            Path destination = Path.of("./src/main/resources/naverPlace.png");
+            destination = Path.of("./src/main/resources/naverPlace.png");
             Files.copy(screenshot.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
             
             System.out.println("Screenshot saved to " + destination.toAbsolutePath());
@@ -53,7 +56,7 @@ public class ScreenshotCapture {
             // 파일을 InputStreamResource로 변환하여 응답으로 반환
             InputStreamResource resource = new InputStreamResource(Files.newInputStream(destination));
             
-         // 파일 다운로드를 위한 헤더 설정
+            // 파일 다운로드를 위한 헤더 설정
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=screenshot.png");
             headers.setContentType(MediaType.IMAGE_PNG);
@@ -69,7 +72,17 @@ public class ScreenshotCapture {
             return ResponseEntity.internalServerError().build();
         } finally {
             // WebDriver 종료
-            driver.quit();
+//            driver.quit();
+            
+            // 파일 삭제
+            if (destination != null) {
+                try {
+                    Files.delete(destination);
+                    System.out.println("Temporary screenshot file deleted.");
+                } catch (IOException e) {
+                    System.err.println("Failed to delete temporary screenshot file: " + e.getMessage());
+                }
+            }
         }
     }
 }
