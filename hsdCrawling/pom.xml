@@ -28,7 +28,8 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>1.8</java.version>
+		<maven.compiler.target>1.8</maven.compiler.target>
+    	<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -100,12 +101,17 @@
 
 	<build>
 		<finalName>hsdCrawling</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
+		<plugins>
+		    <plugin>    
+		        <artifactId>maven-compiler-plugin</artifactId>
+		        <configuration>
+		            <source>1.8</source>
+		            <target>1.8</target>
+		            <fork>true</fork>
+                	<memoryMaximum>1024m</memoryMaximum>
+		        </configuration>
+		    </plugin>
+		</plugins>
     </build>
 
 </project>
