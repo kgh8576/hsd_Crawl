@@ -14,6 +14,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +27,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class ScreenshotCapture {
 	
 	@GetMapping("/ScreenshotCapture")
-	public ResponseEntity<InputStreamResource> ScreenshotCapture(@RequestParam String url) {
-		
+	public ResponseEntity<?> ScreenshotCapture(@RequestParam String url, @RequestParam String key) {
+		// 키값 검증
+        if (!"a8B3d9Zx2P4kQ".equals(key)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                 .body("403 Forbidden: Key값 오류");
+        }
 		// WebDriverManager를 사용하여 ChromeDriver 설정 (호환 문제 자동 해결)
         WebDriverManager.chromedriver().setup();
         
