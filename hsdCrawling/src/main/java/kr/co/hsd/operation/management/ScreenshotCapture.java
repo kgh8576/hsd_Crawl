@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import org.openqa.selenium.Dimension;
@@ -53,7 +54,7 @@ public class ScreenshotCapture {
             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
             // 파일 저장 경로 설정
-            destination = Path.of("./src/main/resources/naverPlace.png");
+            destination = Paths.get("./src/main/resources/naverPlace.png");
             Files.copy(screenshot.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
             
             System.out.println("Screenshot saved to " + destination.toAbsolutePath());

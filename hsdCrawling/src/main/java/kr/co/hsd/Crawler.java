@@ -244,7 +244,7 @@ public class Crawler {
 			            				}
 			            				order.setItemTot(parentsItem.findElement(By.xpath(".//div[1]/span[2]")).getText().replaceAll("원","").replace(",", ""));
 			        					//자식상품 담기
-			            				if(!parentsItem.findElement(By.xpath(".//div[2]")).getText().isBlank()) {
+			            				if(!parentsItem.findElement(By.xpath(".//div[2]")).getText().isEmpty()) {
 			            					order.setiCdUserdef1("Y");
 			            					orderList.add(order);
 			            					List<WebElement> childItemList = parentsItem.findElement(By.xpath(".//div[2]")).findElements(By.xpath(".//div"));
