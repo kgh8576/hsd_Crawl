@@ -99,13 +99,11 @@
 	</dependencies>
 
 	<build>
+		<finalName>hsdCrawling</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <packaging>war</packaging>
-                </configuration>
             </plugin>
         </plugins>
     </build>
