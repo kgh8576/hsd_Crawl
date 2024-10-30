@@ -34,10 +34,10 @@ public class ScreenshotCapture {
         // Chrome 옵션 설정
         ChromeOptions options = new ChromeOptions();
         //options.addArguments("--headless"); // 헤드리스 모드로 실행 (브라우저 창이 보이지 않음)
-
+        options.addArguments("--force-device-scale-factor=0.8");
         // WebDriver 인스턴스 생성
         WebDriver driver = new ChromeDriver(options);
-        driver.manage().window().setSize(new Dimension(900, 900));
+        driver.manage().window().setSize(new Dimension(800, 1000));
         Path destination = null;
         
         try {
@@ -72,7 +72,7 @@ public class ScreenshotCapture {
             return ResponseEntity.internalServerError().build();
         } finally {
             // WebDriver 종료
-//            driver.quit();
+            driver.quit();
             
             // 파일 삭제
             if (destination != null) {
