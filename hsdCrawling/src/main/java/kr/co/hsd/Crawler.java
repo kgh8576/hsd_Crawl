@@ -2,6 +2,8 @@ package kr.co.hsd;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +30,29 @@ public class Crawler {
 	public Crawler(YgyService ygyService) {
         this.ygyService = ygyService;
     }
+	
+	@GetMapping("/insertBaminG")
+	public void insertBaminG() {
+		int a = 0;
+		
+        // 시작 날짜와 종료 날짜 설정
+        LocalDate startDate = LocalDate.of(2023, 4, 23);
+        LocalDate endDate = LocalDate.of(2024, 6, 30);
+
+        // 날짜 형식 지정 (YYYYMMDD)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        // 반복문을 통해 1일씩 증가
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            // 날짜를 형식에 맞게 문자열로 변환
+            String formattedDate = date.format(formatter);
+            System.out.println(formattedDate+" Start");
+//            int result = ygyService.insertBaminG(formattedDate);
+//            System.out.println(result);
+            System.out.println(formattedDate+" End");
+        }
+        
+	}
 	
 	@GetMapping("/startCrawl")
 	public void startCrawl() {

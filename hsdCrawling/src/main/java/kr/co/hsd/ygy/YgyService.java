@@ -40,4 +40,8 @@ public class YgyService {
 	public void updateYgyDetailCorrectYn(String id, String pw, String correctYn) {
 		ygyRepository.updateYgyDetailCorrectYn(id, pw, correctYn);
 	}
+
+	public int insertBaminG(String formattedDate) {
+		return ygyRepository.insertBaminG(formattedDate);
+	}
 }
